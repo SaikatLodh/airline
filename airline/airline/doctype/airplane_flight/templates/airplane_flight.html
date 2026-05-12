@@ -1,0 +1,211 @@
+{% extends "templates/web.html" %}
+
+{% block page_content %}
+<style>
+    .boarding-pass {
+        background: #fff;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        margin: 40px 0;
+        border: 1px solid #eee;
+    }
+
+    .pass-header {
+        background: #2c3e50;
+        color: #fff;
+        padding: 30px;
+        position: relative;
+    }
+
+    .airline-name {
+        font-size: 1.2rem;
+        font-weight: 300;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+    }
+
+    .flight-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-top: 10px;
+    }
+
+    .pass-body {
+        padding: 40px;
+        background: radial-gradient(circle at 0% 50%, transparent 15px, #fff 16px),
+            radial-gradient(circle at 100% 50%, transparent 15px, #fff 16px);
+        background-size: 100% 100%;
+        position: relative;
+    }
+
+    .pass-body::before {
+        content: '';
+        position: absolute;
+        top: -1px;
+        left: 0;
+        right: 0;
+        height: 1px;
+        border-top: 2px dashed #eee;
+    }
+
+    .route-display {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 40px;
+    }
+
+    .city-info {
+        text-align: center;
+    }
+
+    .city-code {
+        font-size: 3.5rem;
+        font-weight: 800;
+        color: #2c3e50;
+        display: block;
+        line-height: 1;
+    }
+
+    .city-name {
+        font-size: 1rem;
+        color: #7f8c8d;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .route-icon {
+        font-size: 2.5rem;
+        color: #3498db;
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.1);
+        }
+
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    .details-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+        padding: 30px;
+        background: #f8f9fa;
+        border-radius: 12px;
+    }
+
+    .detail-item label {
+        display: block;
+        font-size: 0.8rem;
+        color: #95a5a6;
+        text-transform: uppercase;
+        margin-bottom: 5px;
+        font-weight: 600;
+    }
+
+    .detail-item span {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #2c3e50;
+    }
+
+    .booking-section {
+        padding: 40px;
+        text-align: center;
+        background: #fff;
+    }
+
+    .btn-book {
+        background: #e67e22;
+        color: #fff;
+        padding: 15px 50px;
+        font-size: 1.2rem;
+        font-weight: 700;
+        border-radius: 50px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        box-shadow: 0 5px 15px rgba(230, 126, 34, 0.3);
+        transition: all 0.3s ease;
+        text-decoration: none !important;
+        display: inline-block;
+    }
+
+    .btn-book:hover {
+        background: #d35400;
+        transform: scale(1.05);
+        color: #fff;
+        box-shadow: 0 8px 20px rgba(230, 126, 34, 0.4);
+    }
+
+    .status-badge {
+        position: absolute;
+        top: 30px;
+        right: 30px;
+        padding: 8px 20px;
+        border-radius: 50px;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(5px);
+        font-weight: 600;
+        letter-spacing: 1px;
+    }
+</style>
+
+<div class="container py-5">
+    <div class="boarding-pass">
+        <div class="pass-header">
+            <div class="airline-name">{{ frappe.db.get_value("Airplane", doc.airplane, "airline") }}</div>
+            <div class="flight-number">{{ doc.name }}</div>
+            <div class="status-badge">{{ doc.status }}</div>
+        </div>
+
+        <div class="pass-body">
+            <div class="route-display">
+                <div class="city-info">
+                    <span class="city-code">{{ doc.source_airport_code }}</span>
+                    <span class="city-name">{{ doc.source_airport }}</span>
+                </div>
+                <div class="route-icon">✈</div>
+                <div class="city-info">
+                    <span class="city-code">{{ doc.destination_airport_code }}</span>
+                    <span class="city-name">{{ doc.destination_airport }}</span>
+                </div>
+            </div>
+
+            <div class="details-grid">
+                <div class="detail-item">
+                    <label>Departure</label>
+                    <span>{{ frappe.utils.format_date(doc.date_of_departure, "d MMMM, YYYY") }} | {{
+                        doc.time_of_departure }}</span>
+                </div>
+                <div class="detail-item">
+                    <label>Duration</label>
+                    <span>{{ frappe.utils.format_duration(doc.duration) }}</span>
+                </div>
+                <div class="detail-item text-right">
+                    <label>Flight Mode</label>
+                    <span>Standard</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="booking-section">
+            <a href="/airplane-ticket-web-form/new?flight={{ doc.name }}&passenger={{ frappe.session.user }}&flight_price={{ doc.flight_price}}"
+                class="btn-book">
+                Book This Flight
+            </a>
+            <p class="mt-3 text-muted small">Experience premium travel with our world-class service.</p>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

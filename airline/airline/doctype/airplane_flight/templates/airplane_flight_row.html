@@ -1,0 +1,103 @@
+<style>
+    .flight-card {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        transition: all 0.3s ease;
+        overflow: hidden;
+        margin-bottom: 20px;
+        border: 1px solid #eee;
+    }
+
+    .flight-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        border-color: #3498db;
+    }
+
+    .flight-header {
+        padding: 20px;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-bottom: 1px solid #eee;
+    }
+
+    .airport-code {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #2c3e50;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .flight-icon {
+        color: #3498db;
+        margin: 0 15px;
+        font-size: 1.2rem;
+    }
+
+    .flight-body {
+        padding: 20px;
+    }
+
+    .flight-info-item {
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        color: #7f8c8d;
+    }
+
+    .flight-info-label {
+        font-weight: 600;
+        min-width: 100px;
+        color: #34495e;
+    }
+
+    .btn-view {
+        background: #3498db;
+        color: #fff;
+        border-radius: 6px;
+        padding: 8px 20px;
+        font-weight: 600;
+        transition: background 0.3s ease;
+        text-decoration: none !important;
+        display: inline-block;
+        margin-top: 10px;
+    }
+
+    .btn-view:hover {
+        background: #2980b9;
+        color: #fff;
+    }
+</style>
+
+<div class="flight-card">
+    <div class="flight-header d-flex align-items-center justify-content-between">
+        <div>
+            <span class="airport-code">{{ doc.source_airport_code }}</span>
+            <span class="flight-icon">✈</span>
+            <span class="airport-code">{{ doc.destination_airport_code }}</span>
+        </div>
+        <div class="badge bg-primary text-white p-2">
+            {{ doc.status }}
+        </div>
+    </div>
+    <div class="flight-body">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="flight-info-item">
+                    <span class="flight-info-label">Departure:</span>
+                    <span>{{ frappe.utils.format_date(doc.date_of_departure, "d MMMM, YYYY") }} at {{ doc.time_of_departure }}</span>
+                </div>
+                <div class="flight-info-item">
+                    <span class="flight-info-label">Duration:</span>
+                    <span>{{ frappe.utils.format_duration(doc.duration) }}</span>
+                </div>
+            </div>
+            <div class="col-md-4 text-right d-flex align-items-end justify-content-end">
+                <a href="/{{ doc.route }}" class="btn-view">
+                    Flight Details
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
